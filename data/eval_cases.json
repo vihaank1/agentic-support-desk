@@ -1,0 +1,14 @@
+[
+ {"id":"price_plus","question":"How much does the Plus plan cost per month?","route":"billing","expect":"$45"},
+ {"id":"late_fee","question":"What is the late fee and when does it apply?","route":"billing","expect":"$7"},
+ {"id":"overage_calc","question":"How much is the overage charge if I use 8 GB on the Basic plan?","route":"billing","expect":"$30"},
+ {"id":"autopay","question":"What is the autopay discount?","route":"billing","expect":"$5"},
+ {"id":"day_pass","question":"How much does an international day pass cost?","route":"billing","expect":"$10"},
+ {"id":"mexico_unlimited","question":"Is Mexico covered on the Unlimited plan?","route":"billing","expect":"no extra charge"},
+ {"id":"day_pass_calc","question":"How much would 3 days of international passes cost?","route":"billing","expect":"$30"},
+ {"id":"refund_window","question":"Can I get a refund 45 days after my billing date?","route":"billing","expect":"30 days"},
+ {"id":"no_service","question":"My phone shows no service, what should I try first?","route":"technical","expect":"restart"},
+ {"id":"reset_network","question":"How do I reset network settings?","route":"technical","expect":"Reset Network Settings"},
+ {"id":"data_not_working","question":"Mobile data is not working but calls work, what should I check?","route":"technical","expect":"APN"},
+ {"id":"unanswerable","question":"What is the favorite color of the company founder?","route":"billing","expect":"don't have enough information"}
+]
