@@ -62,12 +62,15 @@ def build_graph(llm, retriever: Retriever, tracer: Tracer):
                     r = llm.complete(SPECIALIST_SYSTEM.format(domain=domain), prompt)
                     tracer.llm(f"{domain}_agent", r.tokens_in, r.tokens_out, r.seconds)
                     text = r.text.strip()
-                    if "Final:" in text:
+                    # Prefer an Action over a Final in the same message: a model that writes both has
+                    # not seen the observation yet, so its Final would be unsupported.
+                    m = re.search(r"Action:\s*(retrieve|calculate)\[([^\]\n]*)\]", text)
+                    if not m and "Final:" in text:
                         answer = text.split("Final:", 1)[1].strip()
                         break
-                    m = re.search(r"Action: (retrieve|calculate)\[(.*)\]", text, re.S)
                     if not m:
                         break
+                    text = text[:m.end()]  # drop any hallucinated Observation/Final after the action
                     tool, arg = m.groups()
                     if tool == "retrieve":
                         hits = retriever.search(arg, top_k=state.get("top_k", 3))

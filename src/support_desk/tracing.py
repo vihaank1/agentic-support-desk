@@ -8,8 +8,15 @@ import time
 from contextlib import contextmanager
 from pathlib import Path
 
-PRICE_IN_PER_1K = 0.00015   # illustrative USD per 1K input tokens
-PRICE_OUT_PER_1K = 0.0006   # illustrative USD per 1K output tokens
+import os
+
+# ILLUSTRATIVE defaults. Set PRICE_IN_PER_1K / PRICE_OUT_PER_1K to your model's real prices.
+PRICE_IN_PER_1K = float(os.environ.get("PRICE_IN_PER_1K", 0.00015))
+PRICE_OUT_PER_1K = float(os.environ.get("PRICE_OUT_PER_1K", 0.0006))
+
+
+def cost_usd(tokens_in: int, tokens_out: int) -> float:
+    return tokens_in / 1000 * PRICE_IN_PER_1K + tokens_out / 1000 * PRICE_OUT_PER_1K
 
 
 class Tracer:
@@ -26,7 +33,7 @@ class Tracer:
                                 "ms": round((time.perf_counter() - t0) * 1000, 3), **attrs})
 
     def llm(self, node: str, tokens_in: int, tokens_out: int, seconds: float):
-        cost = tokens_in / 1000 * PRICE_IN_PER_1K + tokens_out / 1000 * PRICE_OUT_PER_1K
+        cost = cost_usd(tokens_in, tokens_out)
         self.events.append({"type": "llm", "node": node, "tokens_in": tokens_in,
                             "tokens_out": tokens_out, "seconds": round(seconds, 6),
                             "cost_usd": round(cost, 8)})

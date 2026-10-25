@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agentic-support-desk
+  labels:
+    app: agentic-support-desk
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: agentic-support-desk
+  template:
+    metadata:
+      labels:
+        app: agentic-support-desk
+    spec:
+      containers:
+        - name: api
+          image: agentic-support-desk:local
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: LLM_PROVIDER
+              value: "mock"
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 3
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi

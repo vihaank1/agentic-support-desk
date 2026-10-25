@@ -3,8 +3,8 @@
   "cases": 12,
   "route_accuracy": 1.0,
   "answer_accuracy": 1.0,
-  "p50_wall_ms": 0.77,
-  "p95_wall_ms": 0.94,
+  "p50_wall_ms": 0.82,
+  "p95_wall_ms": 1.03,
   "avg_tokens_per_request": 286.4,
   "avg_cost_usd_per_request_illustrative": 6.333e-05,
   "rows": [
@@ -18,9 +18,9 @@
       "tokens_in": 223,
       "tokens_out": 43,
       "cost_usd": 5.925e-05,
-      "llm_seconds": 0.000201,
-      "tokens_per_sec": 213930.3,
-      "wall_ms": 2.201
+      "llm_seconds": 0.00022,
+      "tokens_per_sec": 195454.5,
+      "wall_ms": 2.442
     },
     {
       "id": "late_fee",
@@ -32,9 +32,9 @@
       "tokens_in": 214,
       "tokens_out": 45,
       "cost_usd": 5.91e-05,
-      "llm_seconds": 4e-05,
-      "tokens_per_sec": 1125000.0,
-      "wall_ms": 0.785
+      "llm_seconds": 4.3e-05,
+      "tokens_per_sec": 1046511.6,
+      "wall_ms": 0.867
     },
     {
       "id": "overage_calc",
@@ -46,9 +46,9 @@
       "tokens_in": 442,
       "tokens_out": 57,
       "cost_usd": 0.0001005,
-      "llm_seconds": 0.00018,
-      "tokens_per_sec": 316666.7,
-      "wall_ms": 0.943
+      "llm_seconds": 0.000195,
+      "tokens_per_sec": 292307.7,
+      "wall_ms": 1.031
     },
     {
       "id": "autopay",
@@ -60,9 +60,9 @@
       "tokens_in": 169,
       "tokens_out": 39,
       "cost_usd": 4.875e-05,
-      "llm_seconds": 2.7e-05,
-      "tokens_per_sec": 1444444.4,
-      "wall_ms": 0.825
+      "llm_seconds": 2.9e-05,
+      "tokens_per_sec": 1344827.6,
+      "wall_ms": 0.881
     },
     {
       "id": "day_pass",
@@ -74,9 +74,9 @@
       "tokens_in": 213,
       "tokens_out": 49,
       "cost_usd": 6.135e-05,
-      "llm_seconds": 3.3e-05,
-      "tokens_per_sec": 1484848.5,
-      "wall_ms": 0.764
+      "llm_seconds": 3.8e-05,
+      "tokens_per_sec": 1289473.7,
+      "wall_ms": 0.812
     },
     {
       "id": "mexico_unlimited",
@@ -88,9 +88,9 @@
       "tokens_in": 218,
       "tokens_out": 41,
       "cost_usd": 5.73e-05,
-      "llm_seconds": 3.7e-05,
-      "tokens_per_sec": 1108108.1,
-      "wall_ms": 0.752
+      "llm_seconds": 3.8e-05,
+      "tokens_per_sec": 1078947.4,
+      "wall_ms": 0.798
     },
     {
       "id": "day_pass_calc",
@@ -102,9 +102,9 @@
       "tokens_in": 394,
       "tokens_out": 46,
       "cost_usd": 8.67e-05,
-      "llm_seconds": 3.1e-05,
-      "tokens_per_sec": 1483871.0,
-      "wall_ms": 0.766
+      "llm_seconds": 3.8e-05,
+      "tokens_per_sec": 1210526.3,
+      "wall_ms": 0.808
     },
     {
       "id": "refund_window",
@@ -116,9 +116,9 @@
       "tokens_in": 245,
       "tokens_out": 45,
       "cost_usd": 6.375e-05,
-      "llm_seconds": 4.1e-05,
-      "tokens_per_sec": 1097561.0,
-      "wall_ms": 0.833
+      "llm_seconds": 5.4e-05,
+      "tokens_per_sec": 833333.3,
+      "wall_ms": 0.887
     },
     {
       "id": "no_service",
@@ -130,9 +130,9 @@
       "tokens_in": 218,
       "tokens_out": 49,
       "cost_usd": 6.21e-05,
-      "llm_seconds": 3.1e-05,
-      "tokens_per_sec": 1580645.2,
-      "wall_ms": 0.742
+      "llm_seconds": 3.4e-05,
+      "tokens_per_sec": 1441176.5,
+      "wall_ms": 0.792
     },
     {
       "id": "reset_network",
@@ -144,9 +144,9 @@
       "tokens_in": 176,
       "tokens_out": 42,
       "cost_usd": 5.16e-05,
-      "llm_seconds": 2.5e-05,
-      "tokens_per_sec": 1680000.0,
-      "wall_ms": 0.732
+      "llm_seconds": 2.7e-05,
+      "tokens_per_sec": 1555555.6,
+      "wall_ms": 0.772
     },
     {
       "id": "data_not_working",
@@ -158,9 +158,9 @@
       "tokens_in": 210,
       "tokens_out": 52,
       "cost_usd": 6.27e-05,
-      "llm_seconds": 3.8e-05,
-      "tokens_per_sec": 1368421.1,
-      "wall_ms": 0.755
+      "llm_seconds": 4e-05,
+      "tokens_per_sec": 1300000.0,
+      "wall_ms": 0.796
     },
     {
       "id": "unanswerable",
@@ -172,9 +172,9 @@
       "tokens_in": 172,
       "tokens_out": 35,
       "cost_usd": 4.68e-05,
-      "llm_seconds": 2.3e-05,
-      "tokens_per_sec": 1521739.1,
-      "wall_ms": 0.761
+      "llm_seconds": 1.8e-05,
+      "tokens_per_sec": 1944444.4,
+      "wall_ms": 0.821
     }
   ]
 }

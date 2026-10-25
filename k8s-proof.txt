@@ -1,0 +1,7 @@
+NAME                                        READY   STATUS    RESTARTS   AGE
+pod/agentic-support-desk-644564595f-778f7   1/1     Running   0          51s
+pod/agentic-support-desk-644564595f-ndg9q   1/1     Running   0          51s
+
+NAME                           TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)   AGE
+service/agentic-support-desk   ClusterIP   10.96.107.7   <none>        80/TCP    51s
+service/kubernetes             ClusterIP   10.96.0.1     <none>        443/TCP   3m59s

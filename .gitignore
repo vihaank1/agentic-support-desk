@@ -2,3 +2,10 @@ __pycache__/
 .pytest_cache/
 *.pyc
 traces.jsonl
+*.dmg
+*.zip
+.venv/
+__pycache__/
+.pytest_cache/
+.env
+.DS_Store

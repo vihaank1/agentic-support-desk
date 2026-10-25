@@ -2,3 +2,7 @@ langgraph>=1.0
 pytest>=8.0
 # optional, only for --llm openai:
 # openai>=1.0
+fastapi
+httpx
+# optional real providers:
+# google-genai

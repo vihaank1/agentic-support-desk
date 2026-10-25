@@ -79,13 +79,13 @@ class MockLLM:
 
 
 class OpenAILLM:
-    """Optional real provider. Untested in this repo's CI (needs network + key)."""
+    """Optional real provider. NOT exercised in this repo's tests (needs network + API key)."""
     name = "openai"
 
-    def __init__(self, model: str = "gpt-4o-mini"):
+    def __init__(self, model: str | None = None, timeout: float = 30.0):
         from openai import OpenAI  # imported lazily so the base install stays light
-        self.client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
-        self.model = model
+        self.client = OpenAI(api_key=os.environ["OPENAI_API_KEY"], timeout=timeout)
+        self.model = model or os.environ.get("OPENAI_MODEL", "gpt-4o-mini")
 
     def complete(self, system: str, prompt: str) -> LLMResult:
         t0 = time.perf_counter()
@@ -94,3 +94,67 @@ class OpenAILLM:
             messages=[{"role": "system", "content": system}, {"role": "user", "content": prompt}])
         return LLMResult(r.choices[0].message.content, r.usage.prompt_tokens,
                          r.usage.completion_tokens, time.perf_counter() - t0)
+
+
+class GeminiLLM:
+    """Optional Google Gemini provider via the google-genai SDK. NOT exercised in this repo's tests."""
+    name = "gemini"
+
+    def __init__(self, model: str | None = None):
+        from google import genai  # imported lazily
+        from google.genai import types
+        self._types = types
+        self.client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
+        self.model = model or os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
+
+    def complete(self, system: str, prompt: str) -> LLMResult:
+        t0 = time.perf_counter()
+        r = self.client.models.generate_content(
+            model=self.model, contents=prompt,
+            config=self._types.GenerateContentConfig(system_instruction=system, temperature=0))
+        u = r.usage_metadata
+        # Gemini 2.5 "thinking" tokens are billed as output, so count them or cost is understated.
+        out = (u.candidates_token_count or 0) + (getattr(u, "thoughts_token_count", 0) or 0)
+        return LLMResult(r.text or "", u.prompt_token_count or 0, out, time.perf_counter() - t0)
+
+
+class BudgetExceeded(RuntimeError):
+    pass
+
+
+class ResilientLLM:
+    """Wraps any provider with retries (exponential backoff) and a hard spend guard.
+
+    Only provider exceptions are retried, and a failed call is never counted as spend.
+    `max_usd` is checked against the prices in tracing.py (illustrative unless overridden by env).
+    """
+
+    def __init__(self, inner, retries: int = 3, base_delay: float = 0.5,
+                 max_usd: float | None = None, sleep=time.sleep):
+        self.inner, self.retries, self.base_delay = inner, retries, base_delay
+        self.max_usd, self._sleep = max_usd, sleep
+        self.name = inner.name
+        self.spent_usd = 0.0
+        self.failed_attempts = 0
+
+    def complete(self, system: str, prompt: str) -> LLMResult:
+        from .tracing import cost_usd
+        if self.max_usd is not None and self.spent_usd >= self.max_usd:
+            raise BudgetExceeded(f"spend guard hit: ${self.spent_usd:.4f} >= ${self.max_usd:.4f}")
+        last = None
+        for attempt in range(self.retries + 1):
+            try:
+                r = self.inner.complete(system, prompt)
+                self.spent_usd += cost_usd(r.tokens_in, r.tokens_out)
+                return r
+            except Exception as e:  # provider/network errors
+                last = e
+                self.failed_attempts += 1
+                if attempt < self.retries:
+                    self._sleep(self.base_delay * (2 ** attempt))
+        raise RuntimeError(f"LLM call failed after {self.retries + 1} attempts: {last}") from last
+
+
+def make_llm(name: str, max_usd: float | None = None):
+    inner = {"mock": MockLLM, "openai": OpenAILLM, "gemini": GeminiLLM}[name]()
+    return inner if name == "mock" else ResilientLLM(inner, retries=4, base_delay=1.0, max_usd=max_usd)

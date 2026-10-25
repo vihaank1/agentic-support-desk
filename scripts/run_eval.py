@@ -9,19 +9,21 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from support_desk.graph import ask, build_graph  # noqa: E402
-from support_desk.llm import MockLLM, OpenAILLM  # noqa: E402
+from support_desk.llm import make_llm  # noqa: E402
 from support_desk.retrieval import Retriever  # noqa: E402
 from support_desk.tracing import Tracer  # noqa: E402
 
 
 def main():
     p = argparse.ArgumentParser()
-    p.add_argument("--llm", choices=["mock", "openai"], default="mock")
+    p.add_argument("--llm", choices=["mock", "openai", "gemini"], default="mock")
+    p.add_argument("--cases", default=str(ROOT / "data" / "eval_cases.json"))
+    p.add_argument("--max-usd", type=float, default=None, help="hard spend guard for real-model runs")
     p.add_argument("--out", default=str(ROOT / "eval_report.json"))
     a = p.parse_args()
-    cases = json.loads((ROOT / "data" / "eval_cases.json").read_text())
+    cases = json.loads(Path(a.cases).read_text())
     retriever = Retriever(ROOT / "data" / "docs")
-    llm = OpenAILLM() if a.llm == "openai" else MockLLM()
+    llm = make_llm(a.llm, max_usd=a.max_usd)
 
     rows, route_ok, ans_ok, wall, toks, cost = [], 0, 0, [], [], []
     for c in cases:
